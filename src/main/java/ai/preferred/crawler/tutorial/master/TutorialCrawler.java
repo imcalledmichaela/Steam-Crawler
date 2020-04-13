@@ -30,10 +30,6 @@ import org.apache.http.entity.ContentType;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
-import org.openqa.selenium.By;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
-import org.openqa.selenium.chrome.ChromeDriver;
 import org.slf4j.LoggerFactory;
 
 import java.awt.*;
@@ -153,13 +149,12 @@ public class TutorialCrawler {
 
     public static void main(String[] args) throws Exception {
         final List<Game> games = new ArrayList<>();
-        String page = "Welcome to Steam - Welcome to Steam.htm.gz";
+        String mainPage = "https://store.steampowered.com/";
+        URL mainURL = new URL(mainPage);
 
-        InputStream stream = TutorialHandler.class.getResourceAsStream(page);
-        System.out.println(stream);
         byte[] content = IOUtils.toByteArray(
                 new BufferedInputStream(
-                        new GZIPInputStream(stream)
+                        mainURL.openStream()
                 )
         );
 
@@ -169,33 +164,20 @@ public class TutorialCrawler {
         // try-with block automatically closes the crawler upon completion.
         try (Crawler crawler = createCrawler(fetcher, session)) {
             int statusCode = 200;
-            String url = "https://store.steampowered.com/";
             ContentType contentType = ContentType.create("text/html", StandardCharsets.UTF_8);
             Header[] headers = {};
             HttpHost proxy = null;
 
-            Request request = new VRequest(page);
-            Response response = new BaseResponse(statusCode, url, content, contentType, headers, proxy);
+            Request request = new VRequest(mainPage);
+            Response response = new BaseResponse(statusCode, mainPage, content, contentType, headers, proxy);
             Scheduler scheduler = new Scheduler(new FIFOJobQueue());
-
             Worker worker = new ThreadedWorkerManager(new InlineExecutorService()).getWorker();
-            System.setProperty("webdriver.chrome.driver", "src/main/resources/chromedriver");
-            WebDriver driver = new ChromeDriver();
 
             VResponse vResponse = new VResponse(response);
             List<String> categoryUrlList = new TutorialHandler().fetchCategoryURL(request, vResponse);
 
-            for (String categoryUrl : categoryUrlList) {
-
-                VResponse pageResponse = crawlUrl(categoryUrl, session, statusCode, contentType, headers, proxy);
-                Document pageDoc = pageResponse.getJsoup();
-                driver.get(categoryUrl);
-                List<WebElement> el = driver.findElements(By.cssSelector("span.paged_items_paging_pagelink"));
-                for(int i = 1; i <= 5; i ++) {
-                    WebElement nextPage = el.get(i);
-                    nextPage.click();
-                    driver.get();
-                }
+            for (String categoryURL : categoryUrlList) {
+                VResponse pageResponse = crawlUrl(categoryURL, session, statusCode, contentType, headers, proxy);
             }
         }
 

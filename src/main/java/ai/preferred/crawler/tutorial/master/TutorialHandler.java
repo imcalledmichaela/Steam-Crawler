@@ -48,9 +48,8 @@ public class TutorialHandler implements Handler {
         // Some vars you may need
         final String html = response.getHtml();
         final Document document = response.getJsoup();
-        System.out.println(document.toString());
-        Element allContent = document.getElementById("NewReleasesRows");
-        Elements listOfGames = allContent.getElementsByClass("tab_item");
+        Element newReleaseRow = document.getElementById("NewReleasesRows");
+        Elements listOfGames = newReleaseRow.getElementsByClass("tab_item");
 
         for (Element e : listOfGames) {
             String gameUrl = e.selectFirst("a").attr("href");
@@ -77,16 +76,12 @@ public class TutorialHandler implements Handler {
         }
     }
 
-
     public List<String> fetchCategoryURL(Request request, VResponse response) {
         LOGGER.info("Processing {}", request.getUrl());
 
         List<String> urlList = new ArrayList<>();
         final String html = response.getHtml();
         final Document document = response.getJsoup();
-
-        // #genre_flyout > div > div:nth-child(2) > div.popup_menu_subheader
-        // #genre_flyout > div > div:nth-child(2) > a:nth-child(2)
 
         for (int i = 2; i < 12; i++) {
             Elements elements = document.select("#genre_flyout > div > div:nth-child(2) > a:nth-child(" + i + ")");
@@ -98,5 +93,24 @@ public class TutorialHandler implements Handler {
         }
 
         return urlList;
+    }
+
+    public List<String> fetchCategory(Request request, VResponse response) {
+        LOGGER.info("Processing {}", request.getUrl());
+
+        List<String> categoryList = new ArrayList<>();
+        final String html = response.getHtml();
+        final Document document = response.getJsoup();
+
+        for (int i = 2; i < 12; i++) {
+            Elements elements = document.select("#genre_flyout > div > div:nth-child(2) > a:nth-child(" + i + ")");
+            for (Element e : elements) {
+                Element element = e.selectFirst("a");
+                String category = element.text();
+                categoryList.add(category);
+            }
+        }
+
+        return categoryList;
     }
 }
