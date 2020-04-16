@@ -64,32 +64,14 @@ public class GameHandler implements Handler {
                     currentPage = Integer.parseInt(param.getValue());
                 }
             }
-            builder.setParameter("page", String.valueOf(currentPage + 1));
-            final String nextPageUrl = builder.toString();
-            // Schedule the next page
-            scheduler.add(new VRequest(nextPageUrl), this);
+            if (currentPage + 1 < 5) {
+                builder.setParameter("page", String.valueOf(currentPage + 1));
+                final String nextPageUrl = builder.toString();
+                // Schedule the next page
+                scheduler.add(new VRequest(nextPageUrl), this);
+            }
         } catch (URISyntaxException | NumberFormatException e) {
             LOGGER.error("unable to parse url: ", e);
         }
     }
-
-    //    public List<String> fetchCategoryURL(VResponse response) {
-//        LOGGER.info("Processing {}", request.getUrl());
-//
-//        List<String> urlList = new ArrayList<>();
-//        final String html = response.getHtml();
-//        final Document document = response.getJsoup();
-//
-//        for (int i = 2; i < 12; i++) {
-//            Elements elements = document.select("#genre_flyout > div > div:nth-child(2) > a:nth-child(" + i + ")");
-//            for (Element e : elements) {
-//                Element element = e.selectFirst("a");
-//                String url = element.attr("href");
-//                urlList.add(url);
-//            }
-//        }
-//
-//        return urlList;
-//    }
-
 }

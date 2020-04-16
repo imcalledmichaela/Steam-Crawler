@@ -1,5 +1,6 @@
 package ai.preferred.crawler.tutorial.master;
 
+import ai.preferred.crawler.tutorial.single.SingleCrawler;
 import ai.preferred.venom.Crawler;
 import ai.preferred.venom.Session;
 import ai.preferred.venom.SleepScheduler;
@@ -18,9 +19,10 @@ import org.slf4j.LoggerFactory;
 
 import ai.preferred.crawler.tutorial.EntityCSVStorage;
 import ai.preferred.crawler.tutorial.entity.Game;
-import java.io.IOException;
-import java.util.List;
-import ai.preferred.crawler.tutorial.single.*;
+
+import java.io.*;
+import java.net.URL;
+import java.util.*;
 
 public class GameCrawler {
 
@@ -43,13 +45,21 @@ public class GameCrawler {
                     .put(STORAGE_KEY, storage)
                     .build();
 
+            List<String> categoryURL = new ArrayList<>();
+            try (Scanner sc = new Scanner(new FileInputStream("data/categories.csv"))) {
+                while(sc.hasNext()) {
+                    categoryURL.add(sc.nextLine());
+                }
+            } catch (FileNotFoundException e) {
+                LOGGER.error("File not found");
+            }
+
             // Start crawler
             try (Crawler crawler = createCrawler(createFetcher(), session).start()) {
                 LOGGER.info("starting crawler...");
-
-                final String startUrl = "https://store.steampowered.com/";
-
-                crawler.getScheduler().add(new VRequest(startUrl), new GameHandler());
+                for (String url : categoryURL) {
+                    crawler.getScheduler().add(new VRequest(url), new GameHandler());
+                }
             } catch (Exception e) {
                 LOGGER.error("Could not run crawler: ", e);
             }
