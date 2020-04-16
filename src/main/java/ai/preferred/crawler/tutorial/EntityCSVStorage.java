@@ -53,7 +53,7 @@ public class EntityCSVStorage<T> implements AutoCloseable {
       printer.printRecord(toList(object));
       printer.flush();
     } catch (IllegalAccessException e) {
-      throw new IOException("unable to store property: ", e);
+      throw new IOException("unable to store game: ", e);
     }
   }
 

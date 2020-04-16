@@ -2,36 +2,27 @@ package ai.preferred.crawler.tutorial.entity;
 
 public class Game {
 
-    private final String name;
-    private final String url;
-    private final String[] tags;
-    private final String price;
-
-    public Game(String name, String url, String[] tags, String price) {
-        this.name = name;
-        this.url = url;
-        this.tags = tags;
-        this.price = price;
-    }
+    private String name;
+    private String[] tags;
+    private String price;
 
     public String getName() {
         return name;
     }
 
-    public String getUrl() {
-        return url;
-    }
+    public void setName(String name) { this.name = name; }
 
-    public String[] getTags() {
-        return tags;
-    }
+    public String[] getTags() { return tags; }
 
-    public String getPrice() {
-        return price;
-    }
+    public void setTags(String[] tags) { this.tags = tags; }
 
+    public String getPrice() { return price; }
+
+    public void setPrice(String price) { this.price = price; }
+
+    @Override
     public String toString() {
-        String result = "Name: " + name + " Price: " + price + " URL: " + url + " Tags: [";
+        String result = "Name: " + name + " Price: " + price + " Tags: [";
         if (tags.length != 0) {
             result += tags[0];
             for (int i = 1; i < tags.length; i++) {
