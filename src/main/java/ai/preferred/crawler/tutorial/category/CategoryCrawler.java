@@ -3,11 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package ai.preferred.crawler.tutorial.single;
+package ai.preferred.crawler.tutorial.category;
 
 import ai.preferred.crawler.tutorial.EntityCSVStorage;
-import ai.preferred.crawler.tutorial.entity.Game;
-import ai.preferred.crawler.tutorial.master.GameHandler;
 import ai.preferred.venom.Crawler;
 import ai.preferred.venom.Handler;
 import ai.preferred.venom.Session;
@@ -17,16 +15,14 @@ import ai.preferred.venom.request.Request;
 import ai.preferred.venom.request.VRequest;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
-
 /**
  * @author Ween Jiann Lee
  */
-public class SingleCrawler {
+public class CategoryCrawler {
 
     // You can use this to log to console
     static final Session.Key<EntityCSVStorage<String>> STORAGE_KEY = new Session.Key<>();
-    private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(SingleCrawler.class);
+    private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(CategoryCrawler.class);
 
     private static final String URL = "https://store.steampowered.com/";
 
@@ -37,7 +33,7 @@ public class SingleCrawler {
 
             // pass in URL and handler
             final Request request = new VRequest(URL);
-            final Handler handler = new SingleHandler();
+            final Handler handler = new CategoryHandler();
 
             crawler.getScheduler().add(request, handler);
         } catch (Exception e) {

@@ -3,9 +3,8 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package ai.preferred.crawler.tutorial.single;
+package ai.preferred.crawler.tutorial.category;
 
-import ai.preferred.crawler.tutorial.EntityCSVStorage;
 import ai.preferred.venom.Handler;
 import ai.preferred.venom.Session;
 import ai.preferred.venom.Worker;
@@ -13,8 +12,6 @@ import ai.preferred.venom.job.Scheduler;
 import ai.preferred.venom.request.Request;
 import ai.preferred.venom.request.VRequest;
 import ai.preferred.venom.response.VResponse;
-import org.apache.http.NameValuePair;
-import org.apache.http.client.utils.URIBuilder;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
@@ -28,9 +25,9 @@ import java.io.*;
 /**
  * @author Ween Jiann Lee
  */
-public class SingleHandler implements Handler {
+public class CategoryHandler implements Handler {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(SingleHandler.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(CategoryHandler.class);
 
     private static int count = 2;
 

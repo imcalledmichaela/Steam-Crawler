@@ -1,17 +1,11 @@
 package ai.preferred.crawler.tutorial.master;
 
-import ai.preferred.crawler.tutorial.single.SingleCrawler;
 import ai.preferred.venom.Crawler;
 import ai.preferred.venom.Session;
 import ai.preferred.venom.SleepScheduler;
 import ai.preferred.venom.fetcher.AsyncFetcher;
 import ai.preferred.venom.fetcher.Fetcher;
 import ai.preferred.venom.request.VRequest;
-import ai.preferred.venom.response.BaseResponse;
-import ai.preferred.venom.response.Response;
-import ai.preferred.venom.response.StorageResponse;
-import ai.preferred.venom.response.VResponse;
-import ai.preferred.venom.storage.StorageRecord;
 import ai.preferred.venom.validator.EmptyContentValidator;
 import ai.preferred.venom.validator.StatusOkValidator;
 import org.slf4j.Logger;
@@ -21,7 +15,6 @@ import ai.preferred.crawler.tutorial.EntityCSVStorage;
 import ai.preferred.crawler.tutorial.entity.Game;
 
 import java.io.*;
-import java.net.URL;
 import java.util.*;
 
 public class GameCrawler {
