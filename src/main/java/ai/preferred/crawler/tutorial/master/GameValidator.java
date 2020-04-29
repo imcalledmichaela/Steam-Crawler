@@ -24,7 +24,7 @@ public class GameValidator implements Validator {
     public Validator.Status isValid(Request request, Response response) {
         final VResponse vResponse = new VResponse(response);
 
-        if (vResponse.getHtml().contains("Steam")) {
+        if (vResponse.getHtml().contains("steam")) {
             return Status.VALID;
         }
 

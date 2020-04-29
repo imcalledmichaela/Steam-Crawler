@@ -41,11 +41,17 @@ public class CategoryHandler implements Handler {
         Elements elements = document.select("#genre_flyout > div > div:nth-child(2) > a:nth-child(" + count + ")");
         for (Element e : elements) {
             Element element = e.selectFirst("a");
-            final String url = element.attr("href");
+            String url = element.attr("href");
+            int start = url.indexOf("/?");
+            String substring = url.substring(start + 1, url.length());
+            url = url.replace(substring, "");
+
+            String category = element.text();
+
             scheduler.add(new VRequest(url), this);
 
             try (PrintStream out = new PrintStream(new FileOutputStream("data/categories.csv", true))) {
-                out.println(url);
+                out.println(category);
             } catch (FileNotFoundException error) {
                LOGGER.error("File not found");
             }

@@ -38,10 +38,10 @@ public class GameCrawler {
                     .put(STORAGE_KEY, storage)
                     .build();
 
-            List<String> categoryURL = new ArrayList<>();
+            List<String> category = new ArrayList<>();
             try (Scanner sc = new Scanner(new FileInputStream("data/categories.csv"))) {
                 while(sc.hasNext()) {
-                    categoryURL.add(sc.nextLine());
+                    category.add(sc.nextLine());
                 }
             } catch (FileNotFoundException e) {
                 LOGGER.error("File not found");
@@ -49,8 +49,9 @@ public class GameCrawler {
 
             // Start crawler
             try (Crawler crawler = createCrawler(createFetcher(), session).start()) {
-                LOGGER.info("starting crawler...");
-                for (String url : categoryURL) {
+//                LOGGER.info("starting crawler...");
+                for (String c : category) {
+                String url = "https://store.steampowered.com/contenthub/querypaginated/tags/NewReleases/render/?query=&start=0&count=15&cc=SG&l=english&v=4&tag=" + c;
                     crawler.getScheduler().add(new VRequest(url), new GameHandler());
                 }
             } catch (Exception e) {

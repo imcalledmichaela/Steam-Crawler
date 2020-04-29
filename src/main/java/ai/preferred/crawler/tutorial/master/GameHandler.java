@@ -12,14 +12,13 @@ import ai.preferred.venom.response.VResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.utils.URIBuilder;
 import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.json.*;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
-import java.util.*;
+import java.util.List;
 
 public class GameHandler implements Handler {
 
@@ -45,7 +44,7 @@ public class GameHandler implements Handler {
         // Use this wrapper for every IO task, this maintains CPU utilisation to speed up crawling
         worker.executeBlockingIO(() -> {
             for (final Game game : gameList) {
-                LOGGER.info("storing game: {} [{}]", game.toString());
+                LOGGER.info("storing game: {}", game.toString());
                 try {
                     storage.append(game);
                 } catch (IOException e) {
@@ -54,24 +53,32 @@ public class GameHandler implements Handler {
             }
         });
 
-        // Crawl another page if there's a next page
+//         Crawl another page if there's a next page
         final String url = request.getUrl();
-        try {
-            final URIBuilder builder = new URIBuilder(url);
-            int currentPage = 1;
-            for (final NameValuePair param : builder.getQueryParams()) {
-                if ("page".equals(param.getName())) {
-                    currentPage = Integer.parseInt(param.getValue());
-                }
-            }
-            if (currentPage + 1 < 5) {
-                builder.setParameter("page", String.valueOf(currentPage + 1));
-                final String nextPageUrl = builder.toString();
-                // Schedule the next page
-                scheduler.add(new VRequest(nextPageUrl), this);
-            }
-        } catch (URISyntaxException | NumberFormatException e) {
-            LOGGER.error("unable to parse url: ", e);
+        String start = "&start=";
+        String end = "&count=";
+        int numGames = Integer.parseInt(url.substring(url.indexOf(start) + start.length(), url.indexOf(end)));
+
+        if (numGames < 75) {
+            String nextPageUrl = url.replace(start + numGames, start + (numGames + 15));
+            scheduler.add(new VRequest(nextPageUrl), this);
         }
+//        try {
+//            final URIBuilder builder = new URIBuilder(url);
+//            int currentPage = 1;
+//            for (final NameValuePair param : builder.getQueryParams()) {
+//                if ("p".equals(param.getName())) {
+//                    currentPage = Integer.parseInt(param.getValue());
+//                }
+//            }
+//            if (currentPage + 1 < 5) {
+//                builder.setParameter("p", String.valueOf(currentPage + 1));
+//                final String nextPageUrl = builder.toString();
+//                // Schedule the next page
+//                scheduler.add(new VRequest(nextPageUrl), this);
+//            }
+//        } catch (URISyntaxException | NumberFormatException e) {
+//            LOGGER.error("unable to parse url: ", e);
+//        }
     }
 }
